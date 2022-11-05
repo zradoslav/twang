@@ -1,9 +1,8 @@
 twang -- gnarly, awkward tongue
 ---
-Also a Clojure-like Lisp. In development
+also a lisp. in development
 
-TODO:
-- [ ] numerical forms
+todo:
 - [ ] AST evaluation
 - [ ] scopes and environment
 - [ ] lots of stuff

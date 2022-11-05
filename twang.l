@@ -83,21 +83,21 @@ yylval = lval;
 [+-]?[1-9]{digit}*N? {
     int len = yyleng - 1;
     if (yytext[len] == 'N') yytext[len] = '\0';
-    yylval->build<int>(to_int_base(yytext, 10));
+    yylval->build<long long>(to_int_base(yytext, 10));
     return token::INTEGER;
 }
 
 [+-]?0{octdig}*N? {
     int len = yyleng - 1;
     if (yytext[len] == 'N') yytext[len] = '\0';
-    yylval->build<int>(to_int_base(yytext, 8));
+    yylval->build<long long>(to_int_base(yytext, 8));
     return token::INTEGER;
 }
 
 [+-]?0[Xx]{hexdig}+N? {
     int len = yyleng - 1;
     if (yytext[len] == 'N') yytext[len] = '\0';
-    yylval->build<int>(to_int_base(yytext, 16));
+    yylval->build<long long>(to_int_base(yytext, 16));
     return token::INTEGER;
 }
 
@@ -113,19 +113,27 @@ yylval = lval;
         return token::BADTOKEN;
 
     int value = to_int_base(v.substr(delim + 1), base);
-    yylval->build<int>(value);
+    yylval->build<long long>(value);
     return token::INTEGER;
 }
 
- /* TODO: float */
+[+-]?{digit}+([Ee][+-]?{digit}+) {
+		yylval->build<double>(std::stod(yytext));
+		return token::FLOAT;
+}
+
+[+-]?{digit}+\.{digit}+([Ee][+-]?{digit}+)? {
+		yylval->build<double>(std::stod(yytext));
+		return token::FLOAT;
+}
 
 [+-]?{digit}+"/"{digit}+ {
     std::string v(yytext, yyleng);
     auto delim = v.find("/");
-    int numerator = to_int_base(v.substr(0, delim), 10);
-    int denominator = to_int_base(v.substr(delim + 1), 10);
+    long long numerator = to_int_base(v.substr(0, delim), 10);
+    unsigned long long denominator = to_int_base(v.substr(delim + 1), 10);
 
-    yylval->emplace<number::ratio>(numerator, denominator);
+    yylval->emplace<std::tuple<long long, unsigned long long>>(numerator, denominator);
     return token::RATIO;
 }
 

@@ -34,9 +34,24 @@ parser = parser_gen.process('twang.y')
 
 readline_dep = dependency('readline')
 
+forms = [
+	'forms/boolean.cpp',
+	'forms/form.cpp',
+	'forms/keyword.cpp',
+	'forms/list.cpp',
+	'forms/map.cpp',
+	'forms/nil.cpp',
+	'forms/number.cpp',
+	'forms/set.cpp',
+	'forms/string.cpp',
+	'forms/symbol.cpp',
+	'forms/vector.cpp'
+]
+
 bin = executable('twang',
     'main.cpp',
     'reader.cpp',
+    forms,
     lexer, parser,
     dependencies: [readline_dep]
 )
